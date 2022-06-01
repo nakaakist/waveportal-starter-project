@@ -24,11 +24,55 @@
   margin-top: 16px;
 }
 
-.waveButton {
+.operationArea {
+  text-align: center;
+}
+
+.button {
   cursor: pointer;
   margin-top: 16px;
   padding: 8px;
   border: 0;
   border-radius: 5px;
-  
+  width: 200px;
+  background: tomato;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.totalWaves {
+  text-align: center;
+  margin: 32px 0;
+}
+
+.totalWaves h1 {
+  font-size: 48px;
+  margin: 0;
+}
+
+.address h4 {
+  font-size: 14px;
+  margin: 32px 0 8px 0;
+}
+
+.codelink {
+  font-size: 16px;
+  color: gray;
+  text-align: center;
+  margin: 32px 0 0;
+}
+
+.spinner {
+  animation: rotation 1s infinite linear;
+  color: gray;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
