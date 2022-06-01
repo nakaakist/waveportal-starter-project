@@ -24,6 +24,12 @@
   margin-top: 16px;
 }
 
+.error {
+  text-align: center;
+  color: red;
+  margin: 32px 0;
+}
+
 .operationArea {
   text-align: center;
 }

@@ -28,15 +28,20 @@ const getContract = () => {
 export default function App() {
   const [accounts, setAccounts] = React.useState([]);
   const [count, setCount] = React.useState(null);
+  const [countReadError, setCountReadError] = React.useState(false);
 
   const [isWaving, setIsWaving] = React.useState(false);
   const [waved, setWaved] = React.useState(false);
 
   const getTotalWaves = async () => {
-    const contract = getContract();
+    try {
+      const contract = getContract();
 
-    const count = await contract.getTotalWaves();
-    setCount(count.toNumber());
+      const count = await contract.getTotalWaves();
+      setCount(count.toNumber());
+    } catch (error) {
+      setCountReadError(true);
+    }
   };
 
   const wave = async () => {
@@ -95,13 +100,19 @@ export default function App() {
 
         <div className="totalWaves">
           <h3>Total waves</h3>
-          <h1>
-            {count == null ? (
-              <FontAwesomeIcon icon={faSpinner} className="spinner" />
-            ) : (
-              count
-            )}
-          </h1>
+          {countReadError ? (
+            <div className="error">
+              Error reading waves. make sure you use Goerli test network
+            </div>
+          ) : (
+            <h1>
+              {count == null ? (
+                <FontAwesomeIcon icon={faSpinner} className="spinner" />
+              ) : (
+                count
+              )}
+            </h1>
+          )}
         </div>
 
         <div className="operationArea">
