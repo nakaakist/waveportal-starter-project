@@ -27,8 +27,14 @@ const getContract = () => {
 
 export default function App() {
   const [accounts, setAccounts] = React.useState([]);
+
+  const [message, setMessage] = React.useState("");
+
   const [count, setCount] = React.useState(null);
+  const [allWaves, setAllWaves] = React.useState([]);
+
   const [countReadError, setCountReadError] = React.useState(false);
+  const [wavesReadError, setWavesReadError] = React.useState(false);
 
   const [isWaving, setIsWaving] = React.useState(false);
   const [waved, setWaved] = React.useState(false);
@@ -40,7 +46,28 @@ export default function App() {
       const count = await contract.getTotalWaves();
       setCount(count.toNumber());
     } catch (error) {
+      console.error(error);
       setCountReadError(true);
+    }
+  };
+
+  const getAllWaves = async () => {
+    try {
+      const contract = getContract();
+
+      const waves = await contract.getAllWaves();
+      setAllWaves(
+        waves
+          .map((w) => ({
+            address: w.waver,
+            timestamp: new Date(w.timestamp * 1000),
+            message: w.message,
+          }))
+          .sort((w1, w2) => w2.timestamp - w1.timestamp)
+      );
+    } catch (error) {
+      console.error(error);
+      setWavesReadError(true);
     }
   };
 
@@ -49,14 +76,15 @@ export default function App() {
       const contract = getContract();
 
       setIsWaving(true);
-      const waveTxn = await contract.wave();
+      const waveTxn = await contract.wave(message);
       await waveTxn.wait();
-      await getTotalWaves();
+      await Promise.all([getTotalWaves(), getAllWaves()]);
 
       setIsWaving(false);
       setWaved(true);
     } catch (error) {
       window.alert("Error occured while trying to wave, try again.");
+      console.error(error);
       setIsWaving(false);
     }
 
@@ -82,6 +110,7 @@ export default function App() {
   React.useEffect(() => {
     checkWallet();
     getTotalWaves();
+    getAllWaves();
   }, []);
 
   return (
@@ -124,7 +153,18 @@ export default function App() {
 
           {!waved && !isWaving && accounts.length > 0 && (
             <>
-              <button className="button" onClick={wave}>
+              <input
+                type="text"
+                className="messageInput"
+                placeholder="Type message to wave!"
+                onChange={(e) => setMessage(e.target.value)}
+                value={message}
+              />
+              <button
+                className="button"
+                onClick={wave}
+                disabled={message.length === 0}
+              >
                 Wave at Me
               </button>
               <div className="address">
@@ -151,6 +191,37 @@ export default function App() {
             </h2>
           )}
         </div>
+
+        {wavesReadError ? (
+          <div className="error">
+            Error reading waves. make sure you use Goerli test network
+          </div>
+        ) : (
+          <div className="waveDetail">
+            <h2>All waves</h2>
+            {allWaves.map((wave) => {
+              return (
+                <dl key={wave.timestamp}>
+                  <dt>Address</dt>
+                  <dd>
+                    <a
+                      href={`https://goerli.etherscan.io/address/${wave.address}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {wave.address}
+                    </a>
+                  </dd>
+                  <dt>Time</dt>
+                  <dd>{wave.timestamp.toString()}</dd>
+                  <dt>Message</dt>
+                  <dd>{wave.message}</dd>
+                </dl>
+              );
+            })}
+          </div>
+        )}
+
         <a
           href="https://github.com/nakaakist/waveportal-starter-project"
           target="_blank"

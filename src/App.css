@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-top: 64px;
+  margin: 64px 0;
 }
 
 .dataContainer {
@@ -31,6 +31,17 @@
 }
 
 .operationArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.messageInput {
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  height: 32px;
+  width: 400px;
   text-align: center;
 }
 
@@ -47,19 +58,54 @@
   font-weight: bold;
 }
 
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .totalWaves {
   text-align: center;
   margin: 32px 0;
 }
 
-.totalWaves h1 {
-  font-size: 48px;
-  margin: 0;
+.address {
+  color: gray;
+  text-align: center;
 }
 
 .address h4 {
   font-size: 14px;
   margin: 32px 0 8px 0;
+}
+
+.waveDetail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 48px;
+}
+
+.waveDetail dl {
+  background: OldLace;
+  padding: 8px;
+}
+
+.waveDetail dt {
+  width: 20%;
+  float: left;
+  display: inline;
+  padding: 0;
+  margin: 4px 0;
+  color: gray;
+}
+
+.waveDetail dd {
+  width: 80%;
+  float: right;
+  display: inline;
+  padding: 0;
+  margin: 4px 0;
+  word-break: break-all;
 }
 
 .codelink {
