@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
-const contractAddress = "0x7bB648753597B152853B7aA664229d6141D17097";
+const contractAddress = "0xd90F03580359daB989Dc2cd9877EFFbC5aBEb3a4";
 
 const getContract = () => {
   const { ethereum } = window;
