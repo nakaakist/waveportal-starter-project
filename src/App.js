@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
-const contractAddress = "0xd90F03580359daB989Dc2cd9877EFFbC5aBEb3a4";
+const contractAddress = "0xc7F98E1C3020f1A7fd36bD75084EF88D0AfC3924";
 
 const getContract = () => {
   const { ethereum } = window;
@@ -76,7 +76,7 @@ export default function App() {
       const contract = getContract();
 
       setIsWaving(true);
-      const waveTxn = await contract.wave(message);
+      const waveTxn = await contract.wave(message, { gasLimit: 300000 });
       await waveTxn.wait();
       await Promise.all([getTotalWaves(), getAllWaves()]);
 
