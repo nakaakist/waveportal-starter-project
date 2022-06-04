@@ -77,8 +77,9 @@ export default function App() {
 
       setIsWaving(true);
       const waveTxn = await contract.wave(message, { gasLimit: 300000 });
-      await waveTxn.wait();
-      await Promise.all([getTotalWaves(), getAllWaves()]);
+      const result = await waveTxn.wait();
+
+      console.log("wave result", result);
 
       setIsWaving(false);
       setWaved(true);
@@ -111,6 +112,25 @@ export default function App() {
     checkWallet();
     getTotalWaves();
     getAllWaves();
+  }, []);
+
+  React.useEffect(() => {
+    const contract = getContract();
+
+    const onNewWave = (from, timestamp, message) => {
+      console.log("NewWave", from, timestamp, message);
+      setAllWaves((prevWaves) => [
+        ...prevWaves,
+        { address: from, timestamp: new Date(timestamp * 1000), message },
+      ]);
+      setCount((prevCount) => prevCount + 1);
+    };
+
+    contract.on("NewWave", onNewWave);
+
+    return () => {
+      contract.off("NewWave", onNewWave);
+    };
   }, []);
 
   return (
@@ -201,7 +221,7 @@ export default function App() {
             <h2>All waves</h2>
             {allWaves.map((wave) => {
               return (
-                <dl key={wave.timestamp}>
+                <dl key={`${wave.timestamp}${wave.address}`}>
                   <dt>Address</dt>
                   <dd>
                     <a
